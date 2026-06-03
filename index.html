@@ -978,13 +978,8 @@ document.addEventListener('keydown',function(e){
 async function init(){
   setTimeout(loadStarCounts, 2000);
   setTimeout(()=>{initMap();initCalendar();},120);
-  try{
-    const snap=await db.collection('teams').limit(1).get();
-    if(snap.empty){
-      const batch=db.batch();
-      SEED.forEach(t=>batch.set(db.collection('teams').doc(t.id),t));
-      await batch.commit();
-    }
+  // Firestoreからデータを読み込む（自動挿入なし）
+    try{
     await Promise.all([loadTeams(),loadAreas()]);
     auth.onAuthStateChanged(async user=>{
       if(user) await loadRepTeam(user.email);
